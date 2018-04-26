@@ -6,9 +6,7 @@
   <div class="row">
     <div class="col-md-6">
       <input-typeahead 
-        [list]="results" 
-        [displayFieldName]="'full_name'" 
-        [valueFieldName]="'id'" 
+        [list]="results"
         (search)="search($event)"
         (valueChanged)="valueChanged($event)">
       </input-typeahead>

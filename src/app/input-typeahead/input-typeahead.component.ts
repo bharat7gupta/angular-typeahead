@@ -57,15 +57,9 @@ export class InputTypeaheadComponent implements OnInit, AfterViewChecked {
     constructor(private elementRef: ElementRef) { }
 
     ngOnInit() {
-        if(!this.displayFieldName || this.displayFieldName===null)
-            throw "Invalid displayFieldName";
-
-        if(!this.valueFieldName || this.valueFieldName===null)
-            throw "Invalid valueFieldName";
 
         this.typeahead = fromEvent(this.searchBox.nativeElement, 'input').pipe(
             map((e: any) => e.target.value),
-            filter(text => text.length > 2),
             debounceTime(200),
             distinctUntilChanged()
         );
@@ -76,7 +70,7 @@ export class InputTypeaheadComponent implements OnInit, AfterViewChecked {
     }
     
     ngAfterViewChecked() {
-        if(this.showList) {
+        if(this.showList && this.listEl) {
             let elementToFocus = this.listItemEls.find((listItem, i, array) => {
                 return listItem.nativeElement.className.indexOf("active") >= 0;
             });
@@ -147,11 +141,19 @@ export class InputTypeaheadComponent implements OnInit, AfterViewChecked {
         }
     }
 
+    isActive(listItem) {
+        return this.tempCurrent && this.getValue(this.tempCurrent)===this.getValue(listItem);
+    }
+
+    private getValue(t) {
+        return this.valueFieldName ? t[this.valueFieldName] : t;
+    }
+
     // get index of selected item from the available list. search param will be applicable on list, if any
     private getSelectedIndex(): number {
         for(var i=0; i<this._list.length; i++){
             if(this.tempCurrent && this.tempCurrent !== null
-                && this.tempCurrent[this.valueFieldName] === this._list[i][this.valueFieldName])
+                && this.getValue(this.tempCurrent) === this.getValue(this._list[i]))
                 return i;
         }
         return -1;

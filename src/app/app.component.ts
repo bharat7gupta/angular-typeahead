@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { SuggestionService } from './suggestion.service';
 
 @Component({
   selector: 'app-root',
@@ -9,10 +10,14 @@ export class AppComponent {
   selectedValue: any;
   results: Array<Object> = [];
 
-  search(searchTerm: any) {
-    this.results = this.options.filter((t: any) => searchTerm && t.full_name.toLowerCase().indexOf(searchTerm.toLowerCase()) >= 0);
+  constructor(private suggestionService: SuggestionService) {}
 
-    console.log(this.results);
+  search(searchTerm: any) {
+    this.suggestionService.getSuggestion(searchTerm)
+      .subscribe((response: any) => {
+        // this.results = this.options.filter((t: any) => searchTerm && t.full_name.toLowerCase().indexOf(searchTerm.toLowerCase()) >= 0);
+        this.results = response;
+      });
   }
 
   valueChanged(value: any) {

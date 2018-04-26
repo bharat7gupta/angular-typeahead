@@ -5,11 +5,11 @@
                 (keyup)="navigateList($event);" 
                 (keydown)="handleKeyDown($event);" 
                 [class.invalid-input]="invalid" />
-        <ul class="dropdown-menu list" #list>
+        <ul *ngIf="searchTerm && searchTerm.length" class="dropdown-menu list" #list>
             <li *ngFor="let listItem of _list" #listItemEls
-                        [class.active]="this.tempCurrent && this.tempCurrent[this.valueFieldName]===listItem[this.valueFieldName]"
+                        [class.active]="isActive(listItem)"
                         (mousemove)="tempCurrent = listItem">
-                <a href="javascript:void(0);" (click)="setValue(listItem)">{{listItem[this.displayFieldName]}}</a>
+                <a href="javascript:void(0);" (click)="setValue(listItem)">{{this.displayFieldName ? listItem[this.displayFieldName] : listItem}}</a>
             </li>
         </ul>
         <span class="input-group-addon btn-show-list" (click)="clearInput()">Clear</span>
